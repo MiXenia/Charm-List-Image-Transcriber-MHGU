@@ -95,6 +95,6 @@ for x in range (0,len(dirlist)):
         except:
             imgt.show()
             out = input ("What does this say? ")
-            out = re.findall("-*\d+", out)[0]
+            out = re.findall("-*\d*", out)[0] if out != "" else ""
         outs += out + "\n"
         outf.write(outs)
