@@ -1,3 +1,5 @@
+import os
+
 from PIL import Image
 from pytesseract import pytesseract
 import re
@@ -21,55 +23,78 @@ sr = 1251
 #Top and bottom of first talisman
 top = 100
 bot = 129
+#Bottom of the chart
+bottom = 385
 
-img = Image.open(r"Input\1.jpg")
-outf = open("Output\mycharms.txt", "a")
+outf = open("Output\mycharms.txt", "w")
 pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract"
 
-#For loop of all 8 rows of the Talisman Menu
-for i in range (0,8):
-    #Multiply the counter by 32, the height of each row.
-    x = 32 * i
+#A function for correcting incorrect skill names.
+def autocorrect(ins):
+    ins = "Elderfrost X"    if ins == "Eldertrost X"    else ins
+    ins = "Stam Recov"      if ins == "StamRecov"       else ins
+    ins = "Endurance"       if ins == "Enduronce"       else ins
+    ins = "Maestro"         if ins == "Maestro,"        else ins
+    ins = "Artillery"       if ins == "Antilery"        else ins
+    ins = "Boltreaver"      if ins == "Bokreaver"       else ins
 
-    #Initilizing the output string
-    outs = ""
+    return ins
 
-    # Cropping and Grabbing the slots.
-    imgt = img.crop((sl, top + x, sr, bot + x))
+#Grabs a list of all files in the Input folder and allows the program to run through them all.
+dirlist = os.listdir("Input")
+for x in range (0,len(dirlist)):
+    img = Image.open("Input\\" + dirlist[x])
+
+    #Displays all of the slots from top to bottom for easy input.
+    imgt = img.crop((sl, top, sr, bottom))
     imgt.show()
-    out = input("How many slots? ")
-    outs += out + ","
 
-    #Cropping and reading the Name of Skill A.
-    imgt = img.crop((sanl, top + x, sanr, bot + x))
-    out = pytesseract.image_to_string(imgt)[:-2]
-    outs += out + ","#Cropping and reading the Level of Skill A.
-    imgt = img.crop((sall, top + x, salr, bot + x))
-    out = pytesseract.image_to_string(imgt)[:-2]
-    #Sometimes tesseract can't read the numbers... if the regex fails
-    #then this Try Catch will ask the user what the image says
-    try:
-        out = re.findall("-*\d+", out)[0]
-    except:
-        imgt.show()
-        out = input ("What does this say? ")
-        out = re.findall("-*\d+", out)[0]
-    outs += out + ","
+    #For loop of all 9 rows of the Talisman Menu
+    for i in range (0,9):
+        #Multiply the counter by 32, the height of each row.
+        x = 32 * i
 
-    #Cropping and reading the Name of Skill B.
-    imgt = img.crop((sbnl, top + x, sbnr, bot + x))
-    out = pytesseract.image_to_string(imgt)[:-2]
-    outs += out + ","
+        #Initilizing the output string
+        outs = ""
 
-    #Cropping and reading the Level of Skill B.
-    imgt = img.crop((sbll, top + x, sblr, bot + x))
-    out = pytesseract.image_to_string(imgt)[:-2]
-    #The same Try Catch as above.
-    try:
-        out = re.findall("-*\d+", out)[0]
-    except:
-        imgt.show()
-        out = input ("What does this say? ")
-        out = re.findall("-*\d+", out)[0]
-    outs += out
-    outf.write(outs)
+        # Cropping and Grabbing the slots.
+        imgt = img.crop((sl, top, sr, bot + x))
+        print("How many slots in position " + str(i+1) + "?")
+        out = input("")
+        outs += out + ","
+
+        #Cropping and reading the Name of Skill A.
+        imgt = img.crop((sanl, top + x, sanr, bot + x))
+        out = pytesseract.image_to_string(imgt)[:-2]
+        outs += autocorrect(out) + ","
+
+        #Cropping and reading the Level of Skill A.
+        imgt = img.crop((sall, top + x, salr, bot + x))
+        out = pytesseract.image_to_string(imgt)[:-2]
+        #Sometimes tesseract can't read the numbers... if the regex fails
+        #then this Try Catch will ask the user what the image says
+        try:
+            out = re.findall("-*\d+", out)[0]
+        except:
+            imgt.show()
+            out = input ("What does this say? ")
+            out = re.findall("-*\d+", out)[0]
+        outs += out + ","
+
+        #Cropping and reading the Name of Skill B.
+        imgt = img.crop((sbnl, top + x, sbnr, bot + x))
+        out = pytesseract.image_to_string(imgt)[:-2]
+        outs += autocorrect(out) + ","
+
+        #Cropping and reading the Level of Skill B.
+        imgt = img.crop((sbll, top + x, sblr, bot + x))
+        out = pytesseract.image_to_string(imgt)[:-2]
+        #The same Try Catch as above.
+        try:
+            out = re.findall("-*\d+", out)[0]
+        except:
+            imgt.show()
+            out = input ("What does this say? ")
+            out = re.findall("-*\d+", out)[0]
+        outs += out + "\n"
+        outf.write(outs)
