@@ -37,6 +37,12 @@ def autocorrect(ins):
     ins = "Maestro"         if ins == "Maestro,"        else ins
     ins = "Artillery"       if ins == "Antilery"        else ins
     ins = "Boltreaver"      if ins == "Bokreaver"       else ins
+    ins = "Guard Up"        if ins == "Guard Up,"       else ins
+    ins = "Bloodbath"       if ins == "Bloocbath"       else ins
+    ins = "Crit Draw"       if ins == "Crit Drow"       else ins
+    ins = "Normal Up"       if ins == "Nomol Up"        else ins
+    ins = "Carnivore"       if ins == "Comivore"        else ins
+    ins = "Pierce Up"       if ins == "Pierce Up."      else ins
 
     return ins
 
@@ -45,23 +51,25 @@ dirlist = os.listdir("Input")
 for x in range (0,len(dirlist)):
     img = Image.open("Input\\" + dirlist[x])
 
-    #Displays all of the slots from top to bottom for easy input.
+    #Displays all of the slots, then prompts for each of them in turn.
+    #Storing them for the output string later.
+    #Sadly, this is required as the interpreter can't handle the slots.
     imgt = img.crop((sl, top, sr, bottom))
     imgt.show()
+    slots = [""] * 9
+    for j in range (0,9):
+        print("How many slots in position " + str(j+1) + "?")
+        slots[j] = input("")
+    #Perhaps I could detect the lightness of pixels at the top of the slot
+    #For lightness values?
 
     #For loop of all 9 rows of the Talisman Menu
     for i in range (0,9):
         #Multiply the counter by 32, the height of each row.
         x = 32 * i
 
-        #Initilizing the output string
-        outs = ""
-
-        # Cropping and Grabbing the slots.
-        imgt = img.crop((sl, top, sr, bot + x))
-        print("How many slots in position " + str(i+1) + "?")
-        out = input("")
-        outs += out + ","
+        #Initilizing the output string using the matching slots string.
+        outs = slots[i] + ","
 
         #Cropping and reading the Name of Skill A.
         imgt = img.crop((sanl, top + x, sanr, bot + x))
