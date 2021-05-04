@@ -48,8 +48,8 @@ def autocorrect(ins):
 
 #Grabs a list of all files in the Input folder and allows the program to run through them all.
 dirlist = os.listdir("Input")
-for x in range (0,len(dirlist)):
-    img = Image.open("Input\\" + dirlist[x])
+for l in range (0,len(dirlist)):
+    img = Image.open("Input\\" + dirlist[l])
 
     #Displays all of the slots, then prompts for each of them in turn.
     #Storing them for the output string later.
@@ -80,11 +80,12 @@ for x in range (0,len(dirlist)):
         imgt = img.crop((sall, top + x, salr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
         #Sometimes tesseract can't read the numbers... if the regex fails
-        #then this Try Catch will ask the user what the image says
+        #then this Try Catch will ask the user what the image says and save a copy of the copped image.
         try:
             out = re.findall("-*\d+", out)[0]
         except:
             imgt.show()
+            imgt.save("Output\\" + str(l) + ".A." + str(i) + ".jpg")
             out = input ("What does this say? ")
             out = re.findall("-*\d+", out)[0]
         outs += out + ","
@@ -102,6 +103,7 @@ for x in range (0,len(dirlist)):
             out = re.findall("-*\d+", out)[0]
         except:
             imgt.show()
+            imgt.save("Output\\" + str(l) + ".B." + str(i) + ".jpg")
             out = input ("What does this say? ")
             out = re.findall("-*\d*", out)[0] if out != "" else ""
         outs += out + "\n"
