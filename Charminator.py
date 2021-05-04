@@ -54,12 +54,12 @@ for x in range (0,len(dirlist)):
     #Displays all of the slots, then prompts for each of them in turn.
     #Storing them for the output string later.
     #Sadly, this is required as the interpreter can't handle the slots.
-    imgt = img.crop((sl, top, sr, bottom))
-    imgt.show()
-    slots = [""] * 9
-    for j in range (0,9):
-        print("How many slots in position " + str(j+1) + "?")
-        slots[j] = input("")
+    #imgt = img.crop((sl, top, sr, bottom))
+    #imgt.show()
+    #slots = [""] * 9
+    #for j in range (0,9):
+    #    print("How many slots in position " + str(j+1) + "?")
+    #    slots[j] = input("")
     #Perhaps I could detect the lightness of pixels at the top of the slot
     #For lightness values?
 
@@ -69,7 +69,20 @@ for x in range (0,len(dirlist)):
         x = 32 * i
 
         #Initilizing the output string using the matching slots string.
-        outs = slots[i] + ","
+        #outs = slots[i] + ","
+
+        #Cropping and reading the Slots by checking pixel lightness.
+        #Starts by grabbing the top left pixel of the area, then
+        #comparing it to pixels that will be white if there is a
+        #slot in that position.
+        imgt = img.crop((sl, top + x, sr, bot + x))
+        ctrl = sum(imgt.getpixel((0,0)))/3
+        slots = 0
+        for k in range (0,3):
+            test = sum(imgt.getpixel((9 + (k * 18),8)))/3
+            slots += 1 if (test - ctrl) > 25 else 0
+        outs = str(slots) + ","
+
 
         #Cropping and reading the Name of Skill A.
         imgt = img.crop((sanl, top + x, sanr, bot + x))
