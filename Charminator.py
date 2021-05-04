@@ -77,14 +77,15 @@ for l in range (0,len(dirlist)):
         imgt = img.crop((sall, top + x, salr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
         #Sometimes tesseract can't read the numbers... if the regex fails
-        #then this Try Catch will ask the user what the image says and save a copy of the copped image.
+        #then this Try Catch will save a copy of the copped image.
         try:
             out = re.findall("-*\d+", out)[0]
         except:
-            imgt.show()
+            #imgt.show()
             imgt.save("Output\\" + str(l) + ".A." + str(i) + ".jpg")
-            out = input ("What does this say? ")
-            out = re.findall("-*\d+", out)[0]
+            #out = input ("What does this say? ")
+            #out = re.findall("-*\d+", out)[0]
+            out = ""
         outs += out + ","
 
         #Cropping and reading the Name of Skill B.
@@ -99,9 +100,10 @@ for l in range (0,len(dirlist)):
         try:
             out = re.findall("-*\d+", out)[0]
         except:
-            imgt.show()
+            #imgt.show()
             imgt.save("Output\\" + str(l) + ".B." + str(i) + ".jpg")
-            out = input ("What does this say? ")
-            out = re.findall("-*\d*", out)[0] if out != "" else ""
+            #out = input ("What does this say? ")
+            #out = re.findall("-*\d*", out)[0] if out != "" else ""
+            out = ""
         outs += out + "\n"
         outf.write(outs)
