@@ -71,13 +71,28 @@ for l in range (0,len(dirlist)):
         #Cropping and reading the Name of Skill A.
         imgt = img.crop((sanl, top + x, sanr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
+        ctrl = sum(imgt.getpixel((0, 0))) / 3
+        test1 = sum(imgt.getpixel((50, 13))) / 3
+        test2 = sum(imgt.getpixel((44, 13))) / 3
+        test3 = sum(imgt.getpixel((3, 14))) / 3
+        if (test1 - ctrl) > 30:
+            out = "Blight Res"
+        elif (test2 - ctrl) > 30:
+            out = "Charmer"
+        elif (test3 - ctrl) > 30:
+            out = "KO"
+        else:
+            out = ""
         outs += autocorrect(out) + ","
+        if out == " ":
+            imgt.save("Output\Space." + str(l) + "." + str(i) + ".jpg")
 
         #Cropping and reading the Level of Skill A.
         imgt = img.crop((sall, top + x, salr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
         #Sometimes tesseract can't read the numbers... if the regex fails
-        #then this Try Catch will save a copy of the copped image.
+        #then this Try Catch will attempt to use single pixels to get the
+        #correct output.
         try:
             out = re.findall("\d+", out)[0]
         except:
@@ -104,10 +119,6 @@ for l in range (0,len(dirlist)):
         try:
             out = re.findall("-*\d+", out)[0]
         except:
-            #imgt.show()
-            #imgt.save("Output\\" + str(l) + ".B." + str(i) + ".jpg")
-            #out = input ("What does this say? ")
-            #out = re.findall("-*\d*", out)[0] if out != "" else ""
             ctrl = sum(imgt.getpixel((0,0)))/3
             test1 = sum(imgt.getpixel((10,14)))/3
             test2 = sum(imgt.getpixel((29,8)))/3
@@ -141,4 +152,5 @@ for l in range (0,len(dirlist)):
             else:
                 out = ""
         outs += out + "\n"
-        outf.write(outs)
+        if outs != "0,,,,":
+            outf.write(outs)
