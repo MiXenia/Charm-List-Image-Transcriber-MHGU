@@ -79,13 +79,17 @@ for l in range (0,len(dirlist)):
         #Sometimes tesseract can't read the numbers... if the regex fails
         #then this Try Catch will save a copy of the copped image.
         try:
-            out = re.findall("-*\d+", out)[0]
+            out = re.findall("\d+", out)[0]
         except:
-            #imgt.show()
-            imgt.save("Output\\" + str(l) + ".A." + str(i) + ".jpg")
-            #out = input ("What does this say? ")
-            #out = re.findall("-*\d+", out)[0]
-            out = ""
+            ctrl = sum(imgt.getpixel((0, 0)))/3     #Another color test. Control.
+            test1 = sum(imgt.getpixel((12,15)))/3   #Test for +10
+            test2 = sum(imgt.getpixel((31,14)))/3   #Test for +5
+            if (test1 - ctrl) > 25:
+                out = "10"
+            elif (test2 - ctrl) > 25:
+                out = "5"
+            else:
+                out = ""
         outs += out + ","
 
         #Cropping and reading the Name of Skill B.
@@ -101,9 +105,40 @@ for l in range (0,len(dirlist)):
             out = re.findall("-*\d+", out)[0]
         except:
             #imgt.show()
-            imgt.save("Output\\" + str(l) + ".B." + str(i) + ".jpg")
+            #imgt.save("Output\\" + str(l) + ".B." + str(i) + ".jpg")
             #out = input ("What does this say? ")
             #out = re.findall("-*\d*", out)[0] if out != "" else ""
-            out = ""
+            ctrl = sum(imgt.getpixel((0,0)))/3
+            test1 = sum(imgt.getpixel((10,14)))/3
+            test2 = sum(imgt.getpixel((29,8)))/3
+            test3 = sum(imgt.getpixel((32,11)))/3
+            test4 = sum(imgt.getpixel((28,21)))/3
+            test5 = sum(imgt.getpixel((21,19)))/3
+            test6 = sum(imgt.getpixel((31,15)))/3
+            test7 = sum(imgt.getpixel((32,20)))/3
+            test8 = sum(imgt.getpixel((29,10)))/3
+            test9 = sum(imgt.getpixel((31,11)))/3
+            if (test1 - ctrl) > 30:
+                out = "10"
+            elif (test2 - ctrl) > 30:
+                if (test3 - ctrl) > 30:
+                    out = "-3"
+                else:
+                    out = "-5"
+            elif (test4 - ctrl) > 30:
+                out = "-2"
+            elif (test5 - ctrl) > 30:
+                out = "1"
+            elif (test6 - ctrl) > 30:
+                if (test7 - ctrl) > 30:
+                    out = "-1"
+                else:
+                    out = "-9"
+            elif (test8 - ctrl) > 30:
+                out = "-8"
+            elif (test9 - ctrl) > 30:
+                out = "-6"
+            else:
+                out = ""
         outs += out + "\n"
         outf.write(outs)
