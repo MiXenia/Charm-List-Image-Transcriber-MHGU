@@ -48,45 +48,63 @@ def autocorrect(ins):
 
 #Grabs a list of all files in the Input folder and allows the program to run through them all.
 dirlist = os.listdir("Input")
-for x in range (0,len(dirlist)):
-    img = Image.open("Input\\" + dirlist[x])
-
-    #Displays all of the slots, then prompts for each of them in turn.
-    #Storing them for the output string later.
-    #Sadly, this is required as the interpreter can't handle the slots.
-    imgt = img.crop((sl, top, sr, bottom))
-    imgt.show()
-    slots = [""] * 9
-    for j in range (0,9):
-        print("How many slots in position " + str(j+1) + "?")
-        slots[j] = input("")
-    #Perhaps I could detect the lightness of pixels at the top of the slot
-    #For lightness values?
+for l in range (0,len(dirlist)):
+    img = Image.open("Input\\" + dirlist[l])
 
     #For loop of all 9 rows of the Talisman Menu
     for i in range (0,9):
         #Multiply the counter by 32, the height of each row.
         x = 32 * i
 
-        #Initilizing the output string using the matching slots string.
-        outs = slots[i] + ","
+        #Cropping and reading the Slots by checking pixel lightness.
+        imgt = img.crop((sl, top + x, sr, bot + x))
+        ctrl = sum(imgt.getpixel((0,0)))/3                  #Grabbing color of top left pixel.
+        slots = 0
+        for k in range (0,3):
+            test = sum(imgt.getpixel((9 + (k * 18),8)))/3   #Grabbing colors of pixels that will be
+            slots += 1 if (test - ctrl) > 25 else 0         #white if there is a slot there.
+
+        #Initilizing the output string with the slot count.
+        outs = str(slots) + ","
+
 
         #Cropping and reading the Name of Skill A.
         imgt = img.crop((sanl, top + x, sanr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
+        ctrl = sum(imgt.getpixel((0, 0))) / 3
+        test1 = sum(imgt.getpixel((50, 13))) / 3
+        test2 = sum(imgt.getpixel((44, 13))) / 3
+        test3 = sum(imgt.getpixel((3, 14))) / 3
+        if (test1 - ctrl) > 30:
+            out = "Blight Res"
+        elif (test2 - ctrl) > 30:
+            out = "Charmer"
+        elif (test3 - ctrl) > 30:
+            out = "KO"
+        else:
+            out = ""
         outs += autocorrect(out) + ","
+        if out == " ":
+            imgt.save("Output\Space." + str(l) + "." + str(i) + ".jpg")
 
         #Cropping and reading the Level of Skill A.
         imgt = img.crop((sall, top + x, salr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
         #Sometimes tesseract can't read the numbers... if the regex fails
-        #then this Try Catch will ask the user what the image says
+        #then this Try Catch will attempt to use single pixels to get the
+        #correct output.
         try:
-            out = re.findall("-*\d+", out)[0]
+            out = re.findall("\d+", out)[0]
         except:
-            imgt.show()
-            out = input ("What does this say? ")
-            out = re.findall("-*\d+", out)[0]
+            ctrl = sum(imgt.getpixel((0, 0)))/3     #Another color test. Control.
+            test1 = sum(imgt.getpixel((12,15)))/3   #Test for +10
+            test2 = sum(imgt.getpixel((31,14)))/3   #Test for +5
+            if (test1 - ctrl) > 25:
+                out = "10"
+            elif (test2 - ctrl) > 25:
+                out = "5"
+            else:
+                out = ""
         outs += out + ","
 
         #Cropping and reading the Name of Skill B.
@@ -101,8 +119,38 @@ for x in range (0,len(dirlist)):
         try:
             out = re.findall("-*\d+", out)[0]
         except:
-            imgt.show()
-            out = input ("What does this say? ")
-            out = re.findall("-*\d*", out)[0] if out != "" else ""
+            ctrl = sum(imgt.getpixel((0,0)))/3
+            test1 = sum(imgt.getpixel((10,14)))/3
+            test2 = sum(imgt.getpixel((29,8)))/3
+            test3 = sum(imgt.getpixel((32,11)))/3
+            test4 = sum(imgt.getpixel((28,21)))/3
+            test5 = sum(imgt.getpixel((21,19)))/3
+            test6 = sum(imgt.getpixel((31,15)))/3
+            test7 = sum(imgt.getpixel((32,20)))/3
+            test8 = sum(imgt.getpixel((29,10)))/3
+            test9 = sum(imgt.getpixel((31,11)))/3
+            if (test1 - ctrl) > 30:
+                out = "10"
+            elif (test2 - ctrl) > 30:
+                if (test3 - ctrl) > 30:
+                    out = "-3"
+                else:
+                    out = "-5"
+            elif (test4 - ctrl) > 30:
+                out = "-2"
+            elif (test5 - ctrl) > 30:
+                out = "1"
+            elif (test6 - ctrl) > 30:
+                if (test7 - ctrl) > 30:
+                    out = "-1"
+                else:
+                    out = "-9"
+            elif (test8 - ctrl) > 30:
+                out = "-8"
+            elif (test9 - ctrl) > 30:
+                out = "-6"
+            else:
+                out = ""
         outs += out + "\n"
-        outf.write(outs)
+        if outs != "0,,,,":
+            outf.write(outs)
