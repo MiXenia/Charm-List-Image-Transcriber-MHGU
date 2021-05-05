@@ -43,7 +43,43 @@ def autocorrect(ins):
     ins = "Normal Up"       if ins == "Nomol Up"        else ins
     ins = "Carnivore"       if ins == "Comivore"        else ins
     ins = "Pierce Up"       if ins == "Pierce Up."      else ins
-
+    ins = "Defense"         if ins == "Defense:"        else ins
+    ins = "Heavy Up"        if ins == "Heavy Up."       else ins
+    ins = "Nightcloak"      if ins == "Nightclock"      else ins
+    ins = "Punish Draw"     if ins == "Punish Drow"     else ins
+    ins = "Wide-Range"      if ins == "Wide-Ronge"      else ins
+    ins = "TeamLeader"      if ins == "TeamLeoder"      else ins
+    ins = "Charmer"         if ins == "Chamer"          else ins
+    ins = "Dead Eye"        if ins == "DeadEye"         else ins
+    ins = "Redhelm"         if ins == "Redheim"         else ins
+    ins = "Sheathing"       if ins == "Shecthing"       else ins
+    ins = "TeamLeader"      if ins == "Teomleader"      else ins
+    ins = "Ammo Saver"      if ins == "Ammo Saver:"     else ins
+    ins = "TeamLeader"      if ins == "Teomleoder"      else ins
+    ins = "TeamLeader"      if ins == "TeomLeader"      else ins
+    ins = "Wind Res"        if ins == "Vind Res"        else ins
+    ins = "Crit Status"     if ins == "Crit Status,"    else ins
+    ins = "Tremor Res"      if ins == "Tremor Res,"     else ins
+    ins = "Ice Atk"         if ins == "ke Atk"          else ins
+    ins = "Normal S+"       if ins == "Nomol $+"        else ins
+    ins = "Pierce S+"       if ins == "Pierce St"       else ins
+    ins = "Clust S+"        if ins == "Chst $+"         else ins
+    ins = "Carnivore"       if ins == "Comnivore"       else ins
+    ins = "Lasting Pwr"     if ins == "Lasting Per"     else ins
+    ins = "Haphazard"       if ins == "Hophazard)"      else ins
+    ins = "Crag S+"         if ins == "CragS+"          else ins
+    ins = "Bind Res"        if ins == "BindRes"         else ins
+    ins = "Maestro"         if ins == "Moestro"         else ins
+    ins = "Prolong SP"      if ins == "Prolong SP."     else ins
+    ins = "Transporter"     if ins == "Tronsporter"     else ins
+    ins = "Haphazard"       if ins == "Hophazard"       else ins
+    ins = "Botany"          if ins == "Botony"          else ins
+    ins = "Stun"            if ins == "stun"            else ins
+    ins = "Whim"            if ins == "whim"            else ins
+    ins = "Ice Res"         if ins == "IceRes"          else ins
+    ins = "Rec Level"       if ins == "Rec Level,"      else ins
+    ins = "Health"          if ins == "Heath"           else ins
+    ins = "Mounting"        if ins == "Mounting,"       else ins
     return ins
 
 #Grabs a list of all files in the Input folder and allows the program to run through them all.
@@ -75,17 +111,15 @@ for l in range (0,len(dirlist)):
         test1 = sum(imgt.getpixel((50, 13))) / 3
         test2 = sum(imgt.getpixel((44, 13))) / 3
         test3 = sum(imgt.getpixel((3, 14))) / 3
-        if (test1 - ctrl) > 30:
+        if (out == "" or out == " ") and (test1 - ctrl) > 30:
             out = "Blight Res"
-        elif (test2 - ctrl) > 30:
+        elif (out == "" or out == " ") and (test2 - ctrl) > 30:
             out = "Charmer"
-        elif (test3 - ctrl) > 30:
+        elif (out == "" or out == " ") and (test3 - ctrl) > 30:
             out = "KO"
-        else:
+        elif out == "" or out == " ":
             out = ""
         outs += autocorrect(out) + ","
-        if out == " ":
-            imgt.save("Output\Space." + str(l) + "." + str(i) + ".jpg")
 
         #Cropping and reading the Level of Skill A.
         imgt = img.crop((sall, top + x, salr, bot + x))
@@ -95,6 +129,7 @@ for l in range (0,len(dirlist)):
         #correct output.
         try:
             out = re.findall("\d+", out)[0]
+            out = "3" if out == "43" else out
         except:
             ctrl = sum(imgt.getpixel((0, 0)))/3     #Another color test. Control.
             test1 = sum(imgt.getpixel((12,15)))/3   #Test for +10
@@ -110,7 +145,18 @@ for l in range (0,len(dirlist)):
         #Cropping and reading the Name of Skill B.
         imgt = img.crop((sbnl, top + x, sbnr, bot + x))
         out = pytesseract.image_to_string(imgt)[:-2]
+        ctrl = sum(imgt.getpixel((0,0)))/3
+        test1 = sum(imgt.getpixel((9,11)))/3
+        test2 = sum(imgt.getpixel((3,10)))/3
+        if (out == "" or out == " ") and (test1 - ctrl) > 30:
+            out = "Status"
+        elif (out == "" or out == " ") and (test2 - ctrl) > 30:
+            out = "Sense"
+        elif out == "" or out == " ":
+            out = ""
         outs += autocorrect(out) + ","
+        if (out == "" or out == " "):
+            imgt.save("Output\Bace." + str(l) + "." + str(i) + ".jpg")
 
         #Cropping and reading the Level of Skill B.
         imgt = img.crop((sbll, top + x, sblr, bot + x))
@@ -152,5 +198,5 @@ for l in range (0,len(dirlist)):
             else:
                 out = ""
         outs += out + "\n"
-        if outs != "0,,,,":
+        if outs != "0,,,,\n":
             outf.write(outs)
