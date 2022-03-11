@@ -329,7 +329,7 @@ def core():
     dirlist = os.listdir(gui.infile)
     outcore = []
     for switcher in start: switcher.destroy()
-    progress = Progressbar(maximum=((len(dirlist) * 45) + 1), length=400)
+    progress = Progressbar(maximum=((len(dirlist) * 45) + 1), length=500)
     progress.grid(column=0, row=0)
     for l in range(len(dirlist)):
         outcore.append([])
@@ -454,6 +454,7 @@ def core():
                     out = ""
             outcore[l][i].append(out)
             progress.step()
+        if l == 9: gui.title("Mini's CLIT for MHGU")
     progress.destroy()
     Tome(outcore, len(dirlist)-1).page(0)
 
@@ -462,7 +463,8 @@ def corethread():
     threading.Thread(target=core).start()
 
 
-gui = Tk(className=" Mini's Charm List Image Transcriber")
+gui = Tk()
+gui.title("Mini's Charm List Image Transcriber for MHGU")
 gui.infile = ""
 start = [Label(gui, text="Input directory:"), Label(gui, relief=SUNKEN, width=60),
          Button(gui, text="Browse", command=getinfile), Button(gui, text="Start", command=corethread)]
