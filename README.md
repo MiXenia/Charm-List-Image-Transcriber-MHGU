@@ -47,14 +47,14 @@ Enjoy not having to input everything manually anymore!
 As an aside: If any of your charms here are unchecked when you load it in, it means you have another charm that is *better* than that charm, and you can sell or meld it in-game. Clicking Import on this page will import all checked charms into Athena's Armor Set Search to use with set building.
 
 ## Q&A
-# Will you make this for MH Rise or (insert any other Monster Hunter Game here)?
+### Will you make this for MH Rise or (insert any other Monster Hunter Game here)?
 At the moment, no. I only have access to MH4U and MHG on 3DS and MHGU on Switch, and only the Switch has a good screenshot feature. I *do* plan on getting MH Rise for Switch, so Rise may get it's own version in the future.
 
-# For some reason the program isn't reading certain skills/numbers from my screenshots and I have to fix them every single time and its annoying!!
+### For some reason the program isn't reading certain skills/numbers from my screenshots and I have to fix them every single time and its annoying!!
 Please file an issue and attatch the screenshot that has the charm that's giving you issues, I'll take a look at it!
 
-# Can you make this for any other language?
+### Can you make this for any other language?
 I cannot, sorry. If anyone else wants to try their hand at sifting through my code and programming new languages in, please be my guest!
 
-# Can you please change the name of the program?
+### Can you please change the name of the program?
 No💖
