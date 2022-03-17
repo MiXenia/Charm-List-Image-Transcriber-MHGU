@@ -58,3 +58,8 @@ I cannot, sorry. If anyone else wants to try their hand at sifting through my co
 
 ### Can you please change the name of the program?
 No💖
+
+### Can I send you some money as thanks?
+Yes!! You can buy me a coffee!! ~~or more likely a hot chocolate~~
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M63090Z)
