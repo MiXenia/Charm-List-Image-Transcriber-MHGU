@@ -1,15 +1,12 @@
-import os
-
 from PIL import Image as Img
 from PIL import ImageTk as Imgtk
 from pytesseract import pytesseract
-import re
 from difflib import get_close_matches
 from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import *
-import threading
 from functools import partial
+import os, re, threading
 
 skillList = ["Ammo Saver",
              "Amplify",
@@ -221,8 +218,7 @@ if not os.path.exists("Input"): os.mkdir("Input")
 if not os.path.exists("Output"): os.mkdir("Output")
 if not os.path.exists("Pages"): os.mkdir("Pages")
 pgs = []
-
-pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract"
+pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract"
 
 
 # A function for correcting incorrect skill names. Contains a list of all valid skills. Chonkier than intended.
@@ -252,7 +248,10 @@ class Tome:
 
     def finale(nya, page):
         nya.rescribe(page, 0)
-        outfile = open(filedialog.askdirectory(title="Export Charm List", mustexist=True, initialdir="Output") + "/mycharms.txt", mode="w")
+        outfile = open(filedialog.askdirectory(title="Export Charm List",
+                                               mustexist=True,
+                                               initialdir="Output") + "/mycharms.txt",
+                       mode="w")
         for k in nya.results:
             for a in k:
                 outfile.write(a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "\n")
@@ -264,6 +263,7 @@ class Tome:
         pgs = []
         pagey = Imgtk.PhotoImage(Img.open("Pages/Page" + str(pg) + ".jpg"))
         pgs.append(Label(gui, image=pagey))
+        # noinspection PyUnresolvedReferences
         pgs[0].image = pagey
         pgs[0].grid(column=0, columnspan=3, row=1, rowspan=9, sticky="news")
         for p in range(9):
@@ -406,7 +406,7 @@ def core():
                 out = "Sense"
             elif (out == "" or out == " ") and (test3 - ctrl) > 30:
                 out = "Unscathed"
-            elif (out == "" or out == " "):
+            elif out == "" or out == " ":
                 out = ""
             outcore[l][i].append(getskill(out))
             progress.step()
@@ -454,9 +454,8 @@ def core():
                     out = ""
             outcore[l][i].append(out)
             progress.step()
-        if l == 9: gui.title("Mini's CLIT for MHGU")
     progress.destroy()
-    Tome(outcore, len(dirlist)-1).page(0)
+    Tome(outcore, len(dirlist) - 1).page(0)
 
 
 def corethread():
@@ -473,3 +472,4 @@ start[1].grid(column=0, row=1)
 start[2].grid(column=1, row=1)
 start[3].grid(column=0, row=2, sticky="news", columnspan=2)
 gui.mainloop()
+
