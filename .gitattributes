@@ -1,1 +1,2 @@
 bin/pytesseract/** linguist-vendored
+*.html linguist-vendored
