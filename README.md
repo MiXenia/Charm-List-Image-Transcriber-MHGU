@@ -12,7 +12,7 @@ Transfer those screenshots to your computer by whatever means are most ready ava
 
 ![An image of the program showing a directory selector and a start button](Guide/FirstPage.png)
 
-Once it loads, the program should make the "Input", "Output", and "Pages" folders in the same directory as itself if they don't already exist.
+Once it loads, the program should make the "Input" and "Output" folders in the same directory as itself if they don't already exist.
 
 Go ahead and prep a folder (it doesn't have to be the provided Input folder, but using the Input folder streamlines things) with all of your screenshots. Make sure the folder *only* contains screenshots of your charm list and nothing else, just like this:
 
