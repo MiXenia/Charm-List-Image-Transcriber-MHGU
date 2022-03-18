@@ -1,1 +1,1 @@
-pytesseract/* linguist-vendored
+bin/pytesseract/** linguist-vendored
