@@ -1,0 +1,1 @@
+python -m nuitka --onefile --enable-plugin=tk-inter --mingw64 --windows-disable-console --onefile-tempdir-spec=./bin --include-data-dir=./bin/pytesseract=pytesseract --output-dir=Build Charminator.py
