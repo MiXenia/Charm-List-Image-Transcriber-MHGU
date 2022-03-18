@@ -216,9 +216,8 @@ skillList = ["Ammo Saver",
              ]
 if not os.path.exists("Input"): os.mkdir("Input")
 if not os.path.exists("Output"): os.mkdir("Output")
-if not os.path.exists("Pages"): os.mkdir("Pages")
 pgs = []
-pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract"
+pytesseract.tesseract_cmd = r"./bin/pytesseract/tesseract.exe"
 
 
 # A function for correcting incorrect skill names. Contains a list of all valid skills. Chonkier than intended.
@@ -261,7 +260,7 @@ class Tome:
     def page(nya, pg):
         global pgs
         pgs = []
-        pagey = Imgtk.PhotoImage(Img.open("Pages/Page" + str(pg) + ".jpg"))
+        pagey = Imgtk.PhotoImage(Img.open("bin/pages/Page" + str(pg) + ".jpg"))
         pgs.append(Label(gui, image=pagey))
         # noinspection PyUnresolvedReferences
         pgs[0].image = pagey
@@ -320,6 +319,9 @@ def core():
     # Bottom of the chart
     bottom = 385
 
+    # Make a directory for which pages of charms will be saved to display later inside of the temp bin directory so it will be automatically deleted later
+    os.mkdir("bin/pages")
+
     # outcore will be a multidimensional array containing images and the output of the core of the program.
     # [
     #  [[skillA, levelA, skillB, levelB, slots], [skillA, levelA, skillB, levelB, slots]]
@@ -334,7 +336,7 @@ def core():
     for l in range(len(dirlist)):
         outcore.append([])
         img = Img.open(gui.infile + "\\" + dirlist[l])
-        img.crop((sanl, top, sr, bottom)).save("Pages\\Page" + str(l) + ".jpg")
+        img.crop((sanl, top, sr, bottom)).save("bin/pages/Page" + str(l) + ".jpg")
 
         # For loop of all 9 rows of the Talisman Menu
         for i in range(9):
