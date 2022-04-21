@@ -222,7 +222,8 @@ pytesseract.tesseract_cmd = r"./bin/pytesseract/tesseract.exe"
 
 # A function for correcting incorrect skill names. Contains a list of all valid skills. Chonkier than intended.
 def getskill(ins):
-    return get_close_matches(ins, skillList, 1)[0]
+    try: return get_close_matches(ins, skillList, 1)[0]
+    except: return ''
 
 
 # Called by the browse button on the input page of the gui. Gets the input directory and overwrites the existing field.
@@ -247,20 +248,17 @@ class Tome:
 
     def finale(nya, page):
         nya.rescribe(page, 0)
-        outfile = open(filedialog.askdirectory(title="Export Charm List",
-                                               mustexist=True,
-                                               initialdir="Output") + "/mycharms.txt",
-                       mode="w")
+        outfile = open(filedialog.askdirectory(title="Export Charm List",mustexist=True,initialdir="Output") + "/mycharms.txt",mode="w")
         for k in nya.results:
             for a in k:
-                outfile.write(a[0] + "," + a[1] + "," + a[2] + "," + a[3] + "," + a[4] + "\n")
+                outfile.write(f"{a[0]},{a[1]},{a[2]},{a[3]},{a[4]}\n")
         outfile.close()
         gui.destroy()
 
     def page(nya, pg):
         global pgs
         pgs = []
-        pagey = Imgtk.PhotoImage(Img.open("bin/pages/Page" + str(pg) + ".jpg"))
+        pagey = Imgtk.PhotoImage(Img.open(f"bin/pages/Page{str(pg)}.jpg"))
         pgs.append(Label(gui, image=pagey))
         # noinspection PyUnresolvedReferences
         pgs[0].image = pagey
@@ -320,7 +318,7 @@ def core():
     bottom = 385
 
     # Make a directory for which pages of charms will be saved to display later inside of the temp bin directory so it will be automatically deleted later
-    os.mkdir("bin/pages")
+    if not os.path.exists("bin/pages"): os.mkdir("bin/pages")
 
     # outcore will be a multidimensional array containing images and the output of the core of the program.
     # [
@@ -336,6 +334,7 @@ def core():
     for l in range(len(dirlist)):
         outcore.append([])
         img = Img.open(gui.infile + "\\" + dirlist[l])
+        if img.size != (1280, 720): img = img.resize((1280, 720))
         img.crop((sanl, top, sr, bottom)).save("bin/pages/Page" + str(l) + ".jpg")
 
         # For loop of all 9 rows of the Talisman Menu
